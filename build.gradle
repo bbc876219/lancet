@@ -22,8 +22,11 @@ buildscript {
         guava_version = '24.0'
     }
     repositories {
+        google()
         jcenter()
-        mavenCentral()
+        //mavenCentral()
+        maven { url 'https://maven.google.com' }
+        maven { url "https://plugins.gradle.org/m2/" }
         maven {
             if (ele) {
                 url "http://maven.dev.elenet.me/nexus/content/groups/public"
@@ -33,6 +36,7 @@ buildscript {
         }
     }
     dependencies {
+        classpath 'com.android.tools.build:gradle:3.1.4'
         if (ele) {
             classpath 'me.ele:eradle:1.7.0'
         } else {
@@ -72,85 +76,85 @@ subprojects { pro ->
             sources = true
         }
     } else {
-        apply plugin: 'maven'
-        apply plugin: 'com.jfrog.bintray'
-        afterEvaluate {
-            task sourcesJar(type: Jar) {
-                from sourceSets.main.java.srcDirs
-                classifier = 'sources'
-            }
-
-            task javadocJar(type: Jar, dependsOn: javadoc) {
-                classifier = 'javadoc'
-                from javadoc.destinationDir
-            }
-
-            artifacts {
-                archives sourcesJar
-                archives javadocJar
-            }
-            tasks.install {
-                repositories.mavenInstaller {
-                    pom {
-                        project {
-                            packaging 'jar'
-                            licenses {
-                                license {
-                                    name 'The Apache Software License, Version 2.0'
-                                    url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                                }
-                            }
-                            developers {
-                                developer {
-                                    id 'dieyidezui'
-                                    name '耿万鹏'
-                                    email 'dieyidezui@gmail.com'
-                                }
-                                developer {
-                                    id 'jude95'
-                                    name '朱晨曦'
-                                    email '973829691@qq.com'
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        bintray {
-            user = bintrayUser
-            key = bintrayKey
-            configurations = ['archives']
-            pkg {
-                userOrg = "eleme-mt-arch"
-                repo = "maven"
-                userOrg = "eleme-mt-arch"
-                name = pro.name    //发布到JCenter上的项目名字
-                websiteUrl = "https://github.com/eleme/lancet"
-                vcsUrl = "git@github.com:eleme/lancet.git"
-                licenses = ["Apache-2.0"]
-                publish = true
-            }
-        }
+//        apply plugin: 'maven'
+//        apply plugin: 'com.jfrog.bintray'
+//        afterEvaluate {
+//            task sourcesJar(type: Jar) {
+//                from sourceSets.main.java.srcDirs
+//                classifier = 'sources'
+//            }
+//
+////            task javadocJar(type: Jar, dependsOn: javadoc) {
+////                classifier = 'javadoc'
+////                from javadoc.destinationDir
+////            }
+//
+//            artifacts {
+//                archives sourcesJar
+//                archives javadocJar
+//            }
+//            tasks.install {
+//                repositories.mavenInstaller {
+//                    pom {
+//                        project {
+//                            packaging 'jar'
+//                            licenses {
+//                                license {
+//                                    name 'The Apache Software License, Version 2.0'
+//                                    url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+//                                }
+//                            }
+//                            developers {
+//                                developer {
+//                                    id 'dieyidezui'
+//                                    name '耿万鹏'
+//                                    email 'dieyidezui@gmail.com'
+//                                }
+//                                developer {
+//                                    id 'jude95'
+//                                    name '朱晨曦'
+//                                    email '973829691@qq.com'
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//        bintray {
+//            user = bintrayUser
+//            key = bintrayKey
+//            configurations = ['archives']
+//            pkg {
+//                userOrg = "eleme-mt-arch"
+//                repo = "maven"
+//                userOrg = "eleme-mt-arch"
+//                name = pro.name    //发布到JCenter上的项目名字
+//                websiteUrl = "https://github.com/eleme/lancet"
+//                vcsUrl = "git@github.com:eleme/lancet.git"
+//                licenses = ["Apache-2.0"]
+//                publish = true
+//            }
+//        }
     }
 
 }
 
-task uploadAll { task ->
-
-    task.group = 'upload'
-    gradle.projectsEvaluated {
-        task.dependsOn project.tasks.clean
-        task.dependsOn project.tasks.build
-
-        project.tasks.build.mustRunAfter project.tasks.clean
-
-        project.subprojects {
-            if (it.name != 'sample-test') {
-                Task upload = !ele ? it.tasks.bintrayUpload : it.tasks.uploadArchives;
-                task.dependsOn upload
-                upload.mustRunAfter project.tasks.build
-            }
-        }
-    }
-}
+//task uploadAll { task ->
+//
+//    task.group = 'upload'
+//    gradle.projectsEvaluated {
+//        task.dependsOn project.tasks.clean
+//        task.dependsOn project.tasks.build
+//
+//        project.tasks.build.mustRunAfter project.tasks.clean
+//
+//        project.subprojects {
+//            if (it.name != 'sample-test') {
+//                Task upload = !ele ? it.tasks.bintrayUpload : it.tasks.uploadArchives;
+//                task.dependsOn upload
+//                upload.mustRunAfter project.tasks.build
+//            }
+//        }
+//    }
+//}
